@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant Médical IA - Analyse des Symptômes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .chatbot-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .symptom-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
+        }
+
+        .symptom-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: left;
+            border: 2px solid #667eea;
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .result-item strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .symptoms-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #495057;
+        }
+
+        .appointment-section {
+            background: linear-gradient(135deg, #fff3cd, #f8d7da);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid #ffc107;
+        }
+
+        .appointment-section h4 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .examples {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .examples h4 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .examples ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .examples li {
+            background: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .examples li:hover {
+            background-color: #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 1em;
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="chatbot-icon">🏥🤖</div>
+            <h1>Assistant Médical IA</h1>
+            <p>Décrivez vos symptômes pour obtenir une première analyse</p>
+        </div>
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/analyze">
+            <div class="form-group">
+                <label for="symptoms">Décrivez vos symptômes :</label>
+                <textarea 
+                    id="symptoms" 
+                    name="symptoms" 
+                    class="symptom-input" 
+                    placeholder="Ex: fièvre, toux, fatigue, maux de tête..."
+                    required>{{ symptoms if symptoms }}</textarea>
+            </div>
+            <button type="submit" class="btn">🔍 Analyser mes symptômes</button>
+        </form>
+
+        {% if show_results %}
+        <div class="results">
+            <h3>📋 Résultats de l'analyse</h3>
+            
+            <div class="symptoms-display">
+                <strong>Vos symptômes :</strong> {{ symptoms }}
+            </div>
+
+            <div class="result-item">
+                <strong>🩺 Diagnostic probable :</strong><br>
+                {{ maladie }}
+            </div>
+
+            <div class="result-item">
+                <strong>👨‍⚕️ Spécialité recommandée :</strong><br>
+                {{ specialite }}
+            </div>
+
+            <div class="appointment-section">
+                <h4>💡 Souhaitez-vous prendre un rendez-vous ?</h4>
+                <p>Nous pouvons vous aider à trouver un médecin spécialisé dans votre région.</p>
+                <a href="/appointment" class="btn btn-success">✅ Oui, prendre rendez-vous</a>
+                <button onclick="window.location.href='/reset'" class="btn btn-secondary">🔄 Nouvelle analyse</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="examples">
+            <h4>💡 Exemples de symptômes :</h4>
+            <ul>
+                <li onclick="fillSymptoms('fièvre, toux, fatigue')">🤒 Fièvre, toux, fatigue</li>
+                <li onclick="fillSymptoms('douleur thoracique, essoufflement')">💓 Douleur thoracique, essoufflement</li>
+                <li onclick="fillSymptoms('éruption cutanée, démangeaisons')">🔴 Éruption cutanée, démangeaisons</li>
+                <li onclick="fillSymptoms('douleurs articulaires, raideurs')">🦴 Douleurs articulaires, raideurs</li>
+                <li onclick="fillSymptoms('mal de gorge, fièvre')">🗣️ Mal de gorge, fièvre</li>
+                <li onclick="fillSymptoms('maux de tête, vertiges')">🧠 Maux de tête, vertiges</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function fillSymptoms(symptomText) {
+            document.getElementById('symptoms').value = symptomText;
+        }
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('symptoms');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
+</body>
+</html>

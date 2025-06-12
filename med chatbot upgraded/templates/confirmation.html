@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de Rendez-vous - Assistant Médical IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(40, 167, 69, 0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-icon {
+            font-size: 5em;
+            color: #28a745;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .appointment-details {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #28a745;
+            text-align: left;
+        }
+
+        .appointment-details h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-item .icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            min-width: 40px;
+        }
+
+        .detail-item .content-text {
+            flex: 1;
+        }
+
+        .detail-item strong {
+            color: #28a745;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .detail-item span {
+            color: #495057;
+            font-size: 1.1em;
+        }
+
+        .important-info {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #ffc107;
+        }
+
+        .important-info h4 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .important-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .important-info li {
+            color: #856404;
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .important-info li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .actions {
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+        }
+
+        .contact-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .contact-info h5 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p {
+            color: #6c757d;
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        .date-highlight {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .success-icon {
+                font-size: 4em;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .detail-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .detail-item .icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="success-icon">✅</div>
+            
+            <div class="header">
+                <h1>Rendez-vous Confirmé !</h1>
+                <p>Votre rendez-vous a été pris avec succès</p>
+            </div>
+
+            <div class="appointment-details">
+                <h3>📋 Détails de votre rendez-vous</h3>
+                
+                <div class="detail-item">
+                    <div class="icon">👨‍⚕️</div>
+                    <div class="content-text">
+                        <strong>Médecin :</strong>
+                        <span>{{ doctor_name }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="icon">🩺</div>
+                    <div class="content-text">
+                        <strong>Spécialité :</strong>
+                        <span>{{ specialite }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="icon">📅</div>
+                    <div class="content-text">
+                        <strong>Date du rendez-vous :</strong>
+                        <span class="date-highlight">{{ date }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="icon">🩺</div>
+                    <div class="content-text">
+                        <strong>Motif de consultation :</strong>
+                        <span>{{ maladie }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="important-info">
+                <h4>⚠️ Informations importantes</h4>
+                <ul>
+                    <li>Arrivez 15 minutes avant l'heure du rendez-vous</li>
+                    <li>Apportez votre carte d'identité et carte vitale</li>
+                    <li>Préparez la liste de vos médicaments actuels</li>
+                    <li>En cas d'empêchement, prévenez au moins 24h à l'avance</li>
+                    <li>Apportez tous vos examens médicaux récents</li>
+                </ul>
+            </div>
+
+            <div class="contact-info">
+                <h5>📞 Contact du cabinet</h5>
+                <p><strong>Téléphone :</strong> +212 5XX-XXX-XXX</p>
+                <p><strong>Email :</strong> contact@cabinet-medical.ma</p>
+                <p><strong>Adresse :</strong> Avenue Mohammed V, Centre-ville</p>
+            </div>
+
+            <div class="actions">
+                <a href="/" class="btn btn-success">🏠 Retour à l'accueil</a>
+                <button onclick="window.print()" class="btn btn-secondary">🖨️ Imprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation d'entrée
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(50px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.6s ease-out';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Effet de confettis (simple)
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-10px';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = ['#28a745', '#20c997', '#ffc107', '#dc3545'][Math.floor(Math.random() * 4)];
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.zIndex = '1000';
+                    document.body.appendChild(confetti);
+                    
+                    const animation = confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: 'translateY(100vh) rotate(360deg)', opacity: 0 }
+                    ], {
+                        duration: 3000,
+                        easing: 'ease-out'
+                    });
+                    
+                    animation.onfinish = () => confetti.remove();
+                }, i * 100);
+            }
+        }
+
+        // Lancer les confettis après le chargement
+        setTimeout(createConfetti, 500);
+    </script>
+</body>
+</html>

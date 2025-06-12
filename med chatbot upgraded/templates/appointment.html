@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prise de Rendez-vous - Assistant Médical IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .consultation-info {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #667eea;
+        }
+
+        .consultation-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .info-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .info-item strong {
+            color: #667eea;
+            margin-right: 10px;
+            min-width: 120px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .city-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .city-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-book {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            padding: 8px 15px;
+            font-size: 0.9em;
+            margin: 2px;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .doctors-section {
+            margin-top: 30px;
+        }
+
+        .doctors-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .doctor-card {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-2px);
+            border-color: #667eea;
+        }
+
+        .doctor-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .doctor-info {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .availability {
+            margin-top: 15px;
+        }
+
+        .availability h4 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .dates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .date-btn {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: #495057;
+            display: block;
+        }
+
+        .date-btn:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .no-doctors {
+            background: #fff3cd;
+            color: #856404;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid #ffeaa7;
+        }
+
+        .city-examples {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .city-examples h5 {
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .city-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .city-tag {
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border: 1px solid #dee2e6;
+            transition: background-color 0.2s ease;
+        }
+
+        .city-tag:hover {
+            background-color: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .dates-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .info-item strong {
+                margin-bottom: 5px;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button onclick="window.location.href='/'" class="back-btn">← Retour à l'analyse</button>
+        
+        <div class="header">
+            <h1>📅 Prise de Rendez-vous</h1>
+            <p>Trouvez un médecin spécialisé près de chez vous</p>
+        </div>
+
+        <div class="consultation-info">
+            <h3>📋 Résumé de votre consultation</h3>
+            <div class="info-item">
+                <strong>🩺 Diagnostic :</strong>
+                <span>{{ maladie }}</span>
+            </div>
+            <div class="info-item">
+                <strong>👨‍⚕️ Spécialité :</strong>
+                <span>{{ specialite }}</span>
+            </div>
+        </div>
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="form-section">
+            <form method="POST" action="/find_doctors">
+                <div class="form-group">
+                    <label for="city">🏙️ Dans quelle ville cherchez-vous un médecin ?</label>
+                    <input 
+                        type="text" 
+                        id="city" 
+                        name="city" 
+                        class="city-input" 
+                        placeholder="Ex: Casablanca, Rabat, Marrakech..."
+                        value="{{ city if city }}"
+                        required>
+                </div>
+                <button type="submit" class="btn">🔍 Rechercher des médecins</button>
+            </form>
+
+            <div class="city-examples">
+                <h5>💡 Villes disponibles :</h5>
+                <div class="city-tags">
+                    <span class="city-tag" onclick="fillCity('Casablanca')">Casablanca</span>
+                    <span class="city-tag" onclick="fillCity('Rabat')">Rabat</span>
+                    <span class="city-tag" onclick="fillCity('Marrakech')">Marrakech</span>
+                    <span class="city-tag" onclick="fillCity('Fès')">Fès</span>
+                    <span class="city-tag" onclick="fillCity('Tanger')">Tanger</span>
+                </div>
+            </div>
+        </div>
+
+        {% if show_doctors %}
+        <div class="doctors-section">
+            {% if doctors %}
+            <h3>👩‍⚕️ Médecins disponibles à {{ city }}</h3>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                Spécialité : <strong>{{ specialite }}</strong>
+            </p>
+
+            {% for doctor in doctors %}
+            <div class="doctor-card">
+                <div class="doctor-name">{{ doctor.nom }}</div>
+                <div class="doctor-info">
+                    <strong>📍 Ville :</strong> {{ doctor.ville }}<br>
+                    <strong>🩺 Spécialité :</strong> {{ specialite }}
+                </div>
+                
+                <div class="availability">
+                    <h4>📅 Dates disponibles :</h4>
+                    <div class="dates-grid">
+                        {% for date in doctor.disponibilites %}
+                        <a href="/book/{{ doctor.nom|urlencode }}/{{ date }}" class="date-btn">
+                            {{ date }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% else %}
+            <div class="no-doctors">
+                <h3>😔 Aucun médecin trouvé</h3>
+                <p>Désolé, nous n'avons pas trouvé de médecin en <strong>{{ specialite }}</strong> à <strong>{{ city }}</strong>.</p>
+                <p style="margin-top: 10px;">Essayez avec une autre ville ou contactez-nous pour plus d'informations.</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+      function fillCity(cityName) {
+          document.getElementById('city').value = cityName;
+      }
+    </script>
+
+    {% if not show_doctors %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const input = document.getElementById('city');
+          if (input) {
+              input.focus();
+          }
+      });
+    </script>
+    {% endif %}
+
+
+
+</body>
+</html>
