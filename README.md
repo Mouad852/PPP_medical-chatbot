@@ -147,12 +147,4 @@ doctors = {
 }
 ```
 
-## 🐛 Dépannage
 
-### Problèmes courants
-
-1. **Erreur "Module not found"**
-   - Vérifiez que l'environnement virtuel est activé
-   - Réinstallez les dépendances : `pip install -r requirements.txt`
-
-2. **
